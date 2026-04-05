@@ -4,13 +4,12 @@
   --hero-bottom-padding: 1rem;
   --hero-gap: 0.25rem;
   --hero-header-height: 2rem;
-  --hero-status-height: 5.25rem;
   --traffic-panel-padding: clamp(0.45rem, 1.1dvh, 0.8rem);
   --traffic-shell-padding: clamp(0.5rem, 1.25dvh, 0.8rem);
   --traffic-gap: clamp(0.45rem, 1dvh, 0.8rem);
   --hero-stage-height: calc(
     100dvh - var(--hero-top-padding) - var(--hero-bottom-padding) -
-      var(--hero-header-height) - var(--hero-status-height) - (var(--hero-gap) * 2)
+      var(--hero-header-height) - var(--hero-gap)
   );
   --lamp-size-by-height: calc(
     (
@@ -57,9 +56,10 @@
   padding-top: var(--hero-top-padding);
   padding-bottom: var(--hero-bottom-padding);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: var(--hero-gap);
+  grid-template-rows: auto minmax(0, 1fr);
+  row-gap: var(--hero-gap);
   align-items: stretch;
+  overflow: hidden;
 }
 
 .hero-header {
@@ -121,9 +121,12 @@
 }
 
 .dashboard {
+  min-height: 100vh;
+  min-height: 100svh;
   padding-block: 0 5.5rem;
   display: grid;
   gap: 1rem;
+  align-content: start;
 }
 
 .dashboard-main,
@@ -212,48 +215,8 @@
   font-weight: 700;
 }
 
-.status-copy {
-  text-align: center;
-}
-
-.hero-status h1,
 .section-heading h2 {
   margin: 0.25rem 0 0;
-}
-
-.status-meta {
-  margin: 0;
-  color: rgba(147, 197, 253, 0.78);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.68rem;
-  font-weight: 700;
-}
-
-.hero-status {
-  text-align: center;
-  min-height: var(--hero-status-height);
-  padding-inline: 0.5rem;
-}
-
-.hero-status h1 {
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(226, 232, 240, 0.88);
-}
-
-.status-label {
-  margin: 0.45rem 0 0;
-  font-size: clamp(1.9rem, 8vw, 2.5rem);
-  font-weight: 800;
-  color: var(--state-accent);
-}
-
-.status-description {
-  margin: 0.1rem 0 0;
-  color: #cbd5e1;
-  font-size: 0.95rem;
 }
 
 .timer-chip {
@@ -388,7 +351,6 @@
 @media (max-height: 740px) {
   .app {
     --hero-header-height: 1.7rem;
-    --hero-status-height: 4.5rem;
     --traffic-panel-padding: 0.4rem;
     --traffic-shell-padding: 0.45rem;
     --traffic-gap: 0.35rem;
@@ -407,28 +369,11 @@
   .hero-kicker__emoji {
     font-size: 0.88rem;
   }
-
-  .status-meta {
-    font-size: 0.6rem;
-  }
-
-  .hero-status h1 {
-    font-size: 0.72rem;
-  }
-
-  .status-label {
-    font-size: clamp(1.4rem, 6vw, 1.8rem);
-  }
-
-  .status-description {
-    font-size: 0.8rem;
-  }
 }
 
 @media (min-width: 860px) {
   .app {
     --hero-header-height: 3rem;
-    --hero-status-height: 6rem;
     --traffic-panel-padding: 1rem;
     --traffic-shell-padding: 1rem;
     --traffic-gap: 1rem;
@@ -439,9 +384,10 @@
     min-height: auto;
     padding-top: 2rem;
     grid-template-columns: minmax(0, 0.2fr) minmax(19rem, 24rem);
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr;
     align-items: center;
     gap: 1.5rem;
+    overflow: visible;
   }
 
   .hero-kicker {
