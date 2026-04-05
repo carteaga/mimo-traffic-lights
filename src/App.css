@@ -1,4 +1,28 @@
 .app {
+  --hero-horizontal-padding: 1rem;
+  --hero-top-padding: max(0.5rem, env(safe-area-inset-top));
+  --hero-bottom-padding: 1rem;
+  --hero-gap: 0.25rem;
+  --hero-header-height: 2rem;
+  --hero-status-height: 5.25rem;
+  --traffic-panel-padding: clamp(0.45rem, 1.1dvh, 0.8rem);
+  --traffic-shell-padding: clamp(0.5rem, 1.25dvh, 0.8rem);
+  --traffic-gap: clamp(0.45rem, 1dvh, 0.8rem);
+  --hero-stage-height: calc(
+    100dvh - var(--hero-top-padding) - var(--hero-bottom-padding) -
+      var(--hero-header-height) - var(--hero-status-height) - (var(--hero-gap) * 2)
+  );
+  --lamp-size-by-height: calc(
+    (
+        var(--hero-stage-height) - (var(--traffic-panel-padding) * 2) -
+          (var(--traffic-shell-padding) * 2) - (var(--traffic-gap) * 2)
+      ) / 3
+  );
+  --lamp-size-by-width: calc(
+    100vw - (var(--hero-horizontal-padding) * 2) - (var(--traffic-panel-padding) * 2) -
+      (var(--traffic-shell-padding) * 2) - 2rem
+  );
+  --lamp-size: min(var(--lamp-size-by-height), var(--lamp-size-by-width));
   min-height: 100vh;
   background:
     radial-gradient(circle at top, rgba(245, 158, 11, 0.18), transparent 22rem),
@@ -23,16 +47,18 @@
 .footer {
   width: min(100%, 74rem);
   margin: 0 auto;
-  padding-inline: 1rem;
+  padding-inline: var(--hero-horizontal-padding);
 }
 
 .hero-panel {
+  min-height: 100vh;
   min-height: 100svh;
-  padding-top: max(0.5rem, env(safe-area-inset-top));
-  padding-bottom: 1rem;
+  min-height: 100dvh;
+  padding-top: var(--hero-top-padding);
+  padding-bottom: var(--hero-bottom-padding);
   display: grid;
-  grid-template-rows: auto 1fr;
-  gap: 0.35rem;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--hero-gap);
   align-items: stretch;
 }
 
@@ -42,6 +68,7 @@
   justify-content: center;
   gap: clamp(1rem, 5vw, 2.5rem);
   padding-inline: 0.25rem;
+  min-height: var(--hero-header-height);
   text-align: center;
 }
 
@@ -71,6 +98,14 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-align: center;
+}
+
+.hero-light-stage {
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  align-items: center;
+  justify-items: center;
 }
 
 .hero-kicker--red {
@@ -107,28 +142,30 @@
 }
 
 .traffic-light-card {
-  display: grid;
-  gap: 0.75rem;
+  width: min(
+    100%,
+    calc(var(--lamp-size) + (var(--traffic-shell-padding) * 2) + (var(--traffic-panel-padding) * 2))
+  );
   min-height: 100%;
   height: 100%;
-  align-content: space-between;
-  grid-template-rows: minmax(0, 1fr) auto;
+  padding: var(--traffic-panel-padding);
+  display: grid;
+  align-items: center;
 }
 
 .traffic-light-shell {
-  width: min(100%, clamp(15rem, 58svh, 20rem));
+  width: calc(var(--lamp-size) + (var(--traffic-shell-padding) * 2));
   margin: 0 auto;
-  padding: clamp(0.9rem, 2.2svh, 1.15rem);
+  padding: var(--traffic-shell-padding);
   border-radius: 2.75rem;
   background: linear-gradient(180deg, #1f2937 0%, #020617 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 1.4rem 2.5rem rgba(0, 0, 0, 0.35);
-  align-self: center;
 }
 
 .lamp {
-  width: min(100%, clamp(12.8rem, 46svh, 16rem));
+  width: max(6.5rem, var(--lamp-size));
   aspect-ratio: 1;
   margin: 0 auto;
   border-radius: 50%;
@@ -138,7 +175,7 @@
 }
 
 .lamp + .lamp {
-  margin-top: 1rem;
+  margin-top: var(--traffic-gap);
 }
 
 .lamp--active {
@@ -179,7 +216,7 @@
   text-align: center;
 }
 
-.status-copy h1,
+.hero-status h1,
 .section-heading h2 {
   margin: 0.25rem 0 0;
 }
@@ -193,7 +230,13 @@
   font-weight: 700;
 }
 
-.status-copy h1 {
+.hero-status {
+  text-align: center;
+  min-height: var(--hero-status-height);
+  padding-inline: 0.5rem;
+}
+
+.hero-status h1 {
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -342,12 +385,61 @@
   color: #93c5fd;
 }
 
+@media (max-height: 740px) {
+  .app {
+    --hero-header-height: 1.7rem;
+    --hero-status-height: 4.5rem;
+    --traffic-panel-padding: 0.4rem;
+    --traffic-shell-padding: 0.45rem;
+    --traffic-gap: 0.35rem;
+  }
+
+  .hero-header {
+    gap: 0.8rem;
+  }
+
+  .hero-kicker,
+  .hero-title,
+  .timer-value {
+    font-size: 0.74rem;
+  }
+
+  .hero-kicker__emoji {
+    font-size: 0.88rem;
+  }
+
+  .status-meta {
+    font-size: 0.6rem;
+  }
+
+  .hero-status h1 {
+    font-size: 0.72rem;
+  }
+
+  .status-label {
+    font-size: clamp(1.4rem, 6vw, 1.8rem);
+  }
+
+  .status-description {
+    font-size: 0.8rem;
+  }
+}
+
 @media (min-width: 860px) {
+  .app {
+    --hero-header-height: 3rem;
+    --hero-status-height: 6rem;
+    --traffic-panel-padding: 1rem;
+    --traffic-shell-padding: 1rem;
+    --traffic-gap: 1rem;
+    --lamp-size: min(16rem, calc((100dvh - 16rem) / 3));
+  }
+
   .hero-panel {
     min-height: auto;
     padding-top: 2rem;
     grid-template-columns: minmax(0, 0.2fr) minmax(19rem, 24rem);
-    grid-template-rows: 1fr;
+    grid-template-rows: auto 1fr auto;
     align-items: center;
     gap: 1.5rem;
   }
@@ -377,14 +469,15 @@
   }
 
   .traffic-light-card {
+    width: min(100%, 24rem);
     min-height: 42rem;
   }
 
   .traffic-light-shell {
-    width: min(100%, 20rem);
+    width: calc(var(--lamp-size) + (var(--traffic-shell-padding) * 2));
   }
 
   .lamp {
-    width: min(100%, 15rem);
+    width: var(--lamp-size);
   }
 }

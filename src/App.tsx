@@ -7,6 +7,7 @@ import { TimerDisplay } from './components/TimerDisplay'
 import { TrafficLight } from './components/TrafficLight'
 import {
   DEFAULT_CONFIG,
+  STATE_DESCRIPTIONS,
   STATE_EMOJIS,
   STATE_LABELS,
   STORAGE_KEY,
@@ -83,7 +84,15 @@ function App() {
           />
           <p className="hero-title">Simulador virtual</p>
         </header>
-        <TrafficLight currentState={currentState} />
+        <div className="hero-light-stage">
+          <TrafficLight currentState={currentState} />
+        </div>
+        <div className="hero-status" aria-labelledby="estado-actual">
+          <p className="status-meta">Simulador educativo</p>
+          <h1 id="estado-actual">Estado actual</h1>
+          <p className="status-label">{STATE_LABELS[currentState]}</p>
+          <p className="status-description">{STATE_DESCRIPTIONS[currentState]}</p>
+        </div>
       </section>
 
       <section className="dashboard">
