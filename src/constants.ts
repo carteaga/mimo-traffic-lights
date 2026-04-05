@@ -32,3 +32,9 @@ export const STATE_SEQUENCE: TrafficLightState[] = ['red', 'green', 'yellow']
 
 export const MIN_DURATION = 1
 export const MAX_DURATION = 120
+
+export const QUICK_DURATION_PRESETS = {
+  redDuration: [6, 8, 10, 12],
+  yellowDuration: [2, 3, 4],
+  greenDuration: [5, 7, 9, 11],
+} as const

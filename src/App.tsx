@@ -9,6 +9,7 @@ import { TimerDisplay } from './components/TimerDisplay'
 import { TrafficLight } from './components/TrafficLight'
 import {
   DEFAULT_CONFIG,
+  QUICK_DURATION_PRESETS,
   STATE_EMOJIS,
   STATE_LABELS,
   STORAGE_KEY,
@@ -64,6 +65,19 @@ function App() {
     if (matchesCurrentState) {
       selectState(currentState)
     }
+  }
+
+  function handleCycleDuration(
+    key: 'redDuration' | 'yellowDuration' | 'greenDuration',
+  ) {
+    const presets: number[] = [...QUICK_DURATION_PRESETS[key]]
+    const currentValue = config[key]
+    const currentIndex = presets.indexOf(currentValue)
+    const nextValue = currentIndex === -1
+      ? presets[0]
+      : presets[(currentIndex + 1) % presets.length]
+
+    handleDurationChange(key, nextValue)
   }
 
   const handleRemoteStateChange = useCallback(
@@ -153,6 +167,7 @@ function App() {
               <QuickSettingsRail
                 config={config}
                 isSoundBlocked={isBlocked}
+                onCycleDuration={handleCycleDuration}
                 onToggleSound={() =>
                   handleAction(() =>
                     updateConfig({ soundEnabled: !config.soundEnabled }),

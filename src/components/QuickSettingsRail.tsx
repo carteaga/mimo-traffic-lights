@@ -3,6 +3,9 @@ import type { TrafficLightConfig } from '../types'
 type QuickSettingsRailProps = {
   config: TrafficLightConfig
   isSoundBlocked: boolean
+  onCycleDuration: (
+    key: 'redDuration' | 'yellowDuration' | 'greenDuration',
+  ) => void
   onToggleSound: () => void
 }
 
@@ -15,6 +18,7 @@ const QUICK_FIELDS = [
 export function QuickSettingsRail({
   config,
   isSoundBlocked,
+  onCycleDuration,
   onToggleSound,
 }: QuickSettingsRailProps) {
   return (
@@ -24,13 +28,19 @@ export function QuickSettingsRail({
           ⏱
         </p>
         {QUICK_FIELDS.map((field) => (
-          <div key={field.key} className="quick-setting-chip">
+          <button
+            key={field.key}
+            type="button"
+            className="quick-setting-chip"
+            onClick={() => onCycleDuration(field.key)}
+            aria-label={`Cambiar tiempo ${field.label.toLowerCase()} entre presets rápidos`}
+          >
             <div className="quick-setting-chip__header">
               <span aria-hidden="true">{field.icon}</span>
               <span>{field.label.charAt(0)}</span>
             </div>
             <div className="quick-setting-chip__summary">{config[field.key]}s</div>
-          </div>
+          </button>
         ))}
       </div>
 
