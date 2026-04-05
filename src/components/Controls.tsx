@@ -1,87 +1,35 @@
-import { STATE_LABELS } from '../constants'
-import type { Mode, TrafficLightState } from '../types'
-
 type ControlsProps = {
-  currentState: TrafficLightState
   isRunning: boolean
-  mode: Mode
-  onModeChange: (mode: Mode) => void
-  onPause: () => void
   onReset: () => void
-  onSelectState: (state: TrafficLightState) => void
-  onStart: () => void
+  onTogglePlayback: () => void
 }
 
 export function Controls({
-  currentState,
   isRunning,
-  mode,
-  onModeChange,
-  onPause,
   onReset,
-  onSelectState,
-  onStart,
+  onTogglePlayback,
 }: ControlsProps) {
   return (
-    <section className="panel controls-card">
-      <div className="mode-switch" role="tablist" aria-label="Modo de operacion">
-        <button
-          type="button"
-          className={mode === 'automatic' ? 'mode-chip mode-chip--active' : 'mode-chip'}
-          onClick={() => onModeChange('automatic')}
-          role="tab"
-          aria-selected={mode === 'automatic'}
-        >
-          Automatico
-        </button>
-        <button
-          type="button"
-          className={mode === 'manual' ? 'mode-chip mode-chip--active' : 'mode-chip'}
-          onClick={() => onModeChange('manual')}
-          role="tab"
-          aria-selected={mode === 'manual'}
-        >
-          Manual
-        </button>
-      </div>
-
-      <div className="primary-actions">
-        <button
-          type="button"
-          className="action-button action-button--start"
-          onClick={onStart}
-        >
-          Iniciar
-        </button>
-        <button
-          type="button"
-          className="action-button"
-          onClick={onPause}
-          disabled={!isRunning}
-        >
-          Pausar
-        </button>
-        <button type="button" className="action-button" onClick={onReset}>
-          Reiniciar
-        </button>
-      </div>
-
-      <div className="manual-grid" aria-label="Seleccion manual de luz">
-        {(['red', 'yellow', 'green'] as const).map((state) => (
-          <button
-            key={state}
-            type="button"
-            className={
-              currentState === state
-                ? 'manual-button manual-button--active'
-                : 'manual-button'
-            }
-            onClick={() => onSelectState(state)}
-          >
-            {STATE_LABELS[state]}
-          </button>
-        ))}
-      </div>
+    <section
+      className="floating-controls"
+      aria-label="Controles automáticos del semáforo"
+    >
+      <button
+        type="button"
+        className={`floating-control floating-control--primary ${isRunning ? 'floating-control--pause' : 'floating-control--play'}`}
+        onClick={onTogglePlayback}
+        aria-label={isRunning ? 'Pausar ciclo automático' : 'Iniciar ciclo automático'}
+      >
+        {isRunning ? '❚❚' : '▶'}
+      </button>
+      <button
+        type="button"
+        className="floating-control floating-control--stop"
+        onClick={onReset}
+        aria-label="Detener y reiniciar semáforo"
+      >
+        ■
+      </button>
     </section>
   )
 }

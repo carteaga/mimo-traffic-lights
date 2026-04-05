@@ -14,7 +14,6 @@ import {
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useSoundManager } from './hooks/useSoundManager'
 import { useTrafficLightController } from './hooks/useTrafficLightController'
-import type { Mode } from './types'
 import { sanitizeConfig } from './utils/config'
 
 function App() {
@@ -44,11 +43,6 @@ function App() {
   async function handleAction(action: () => void) {
     await primeAudio()
     action()
-  }
-
-  function handleModeChange(mode: Mode) {
-    pause()
-    updateConfig({ mode })
   }
 
   function handleDurationChange(
@@ -84,30 +78,35 @@ function App() {
           <p className="hero-title">Simulador virtual</p>
         </header>
         <div className="hero-light-stage">
-          <TrafficLight currentState={currentState} />
+          <div className="hero-light-stack">
+            <TrafficLight currentState={currentState} />
+            <div className="hero-controls-overlay">
+              <Controls
+                isRunning={isRunning}
+                onReset={() => handleAction(reset)}
+                onTogglePlayback={() =>
+                  handleAction(() => {
+                    updateConfig({ mode: 'automatic' })
+                    if (isRunning) {
+                      pause()
+                      return
+                    }
+                    start()
+                  })
+                }
+              />
+            </div>
+          </div>
         </div>
       </section>
 
       <section className="dashboard">
-        <div className="dashboard-main">
-          <Controls
-            currentState={currentState}
-            isRunning={isRunning}
-            mode={config.mode}
-            onModeChange={handleModeChange}
-            onPause={() => handleAction(pause)}
-            onReset={() => handleAction(reset)}
-            onSelectState={(state) => handleAction(() => selectState(state))}
-            onStart={() => handleAction(start)}
-          />
-        </div>
-
         <aside className="dashboard-side">
           <SettingsPanel
             config={config}
             onDurationChange={handleDurationChange}
             onResetDefaults={() => {
-              setStoredConfig(DEFAULT_CONFIG)
+              setStoredConfig({ ...DEFAULT_CONFIG, mode: 'automatic' })
               reset()
             }}
           />
