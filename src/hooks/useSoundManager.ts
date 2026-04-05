@@ -8,6 +8,8 @@ const FREQUENCIES: Record<TrafficLightState, number> = {
   green: 660,
 }
 
+const COUNTDOWN_FREQUENCY = 880
+
 export function useSoundManager() {
   const audioContextRef = useRef<AudioContext | null>(null)
   const [isSupported, setIsSupported] = useState(
@@ -97,6 +99,39 @@ export function useSoundManager() {
     oscillator.stop(now + 0.3)
   }
 
+  async function playCountdownTone() {
+    const context = getAudioContext()
+
+    if (!context) {
+      return
+    }
+
+    if (context.state !== 'running') {
+      const primeResult = await primeAudio()
+
+      if (primeResult !== 'ready') {
+        return
+      }
+    }
+
+    const oscillator = context.createOscillator()
+    const gainNode = context.createGain()
+    const now = context.currentTime
+
+    oscillator.type = 'square'
+    oscillator.frequency.setValueAtTime(COUNTDOWN_FREQUENCY, now)
+
+    gainNode.gain.setValueAtTime(0.0001, now)
+    gainNode.gain.exponentialRampToValueAtTime(0.06, now + 0.01)
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.14)
+
+    oscillator.connect(gainNode)
+    gainNode.connect(context.destination)
+
+    oscillator.start(now)
+    oscillator.stop(now + 0.16)
+  }
+
   async function playTestTone() {
     const primeResult = await primeAudio()
 
@@ -108,5 +143,13 @@ export function useSoundManager() {
     return 'ready' as const
   }
 
-  return { isBlocked, isReady, isSupported, playTestTone, playTone, primeAudio }
+  return {
+    isBlocked,
+    isReady,
+    isSupported,
+    playCountdownTone,
+    playTestTone,
+    playTone,
+    primeAudio,
+  }
 }

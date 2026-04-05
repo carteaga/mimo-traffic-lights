@@ -6,6 +6,7 @@ import type { TrafficLightConfig, TrafficLightState } from '../types'
 
 type ControllerOptions = {
   config: TrafficLightConfig
+  onCountdownTick?: (timeLeft: number, state: TrafficLightState) => void
   onStateChange?: (state: TrafficLightState) => void
 }
 
@@ -18,6 +19,7 @@ function getNextState(currentState: TrafficLightState) {
 
 export function useTrafficLightController({
   config,
+  onCountdownTick,
   onStateChange,
 }: ControllerOptions) {
   const [currentState, setCurrentState] = useState<TrafficLightState>('red')
@@ -25,10 +27,27 @@ export function useTrafficLightController({
   const [isRunning, setIsRunning] = useState(false)
   const sequenceStateRef = useRef<TrafficLightState>('red')
   const previousEmittedStateRef = useRef<TrafficLightState>('red')
+  const lastCountdownTickRef = useRef<number | null>(null)
+
+  const isTransitionImminent = isRunning && timeLeft <= 3
+
+  useEffect(() => {
+    if (!isRunning || timeLeft > 3 || timeLeft < 1) {
+      return
+    }
+
+    if (lastCountdownTickRef.current === timeLeft) {
+      return
+    }
+
+    lastCountdownTickRef.current = timeLeft
+    onCountdownTick?.(timeLeft, currentState)
+  }, [currentState, isRunning, onCountdownTick, timeLeft])
 
   useEffect(() => {
     if (previousEmittedStateRef.current !== currentState) {
       previousEmittedStateRef.current = currentState
+      lastCountdownTickRef.current = null
       onStateChange?.(currentState)
     }
   }, [currentState, onStateChange])
@@ -62,6 +81,7 @@ export function useTrafficLightController({
   }, [config, isRunning])
 
   function start() {
+    lastCountdownTickRef.current = null
     setTimeLeft((previousTimeLeft) => {
       if (previousTimeLeft < 1) {
         return getDurationForState(config, currentState)
@@ -75,16 +95,19 @@ export function useTrafficLightController({
 
   function pause() {
     setIsRunning(false)
+    lastCountdownTickRef.current = null
   }
 
   function reset() {
     setIsRunning(false)
+    lastCountdownTickRef.current = null
     sequenceStateRef.current = 'red'
     setCurrentState('red')
     setTimeLeft(config.redDuration)
   }
 
   function selectState(state: TrafficLightState) {
+    lastCountdownTickRef.current = null
     sequenceStateRef.current = state
     setCurrentState(state)
     setTimeLeft(getDurationForState(config, state))
@@ -93,6 +116,7 @@ export function useTrafficLightController({
 
   return {
     currentState,
+    isTransitionImminent,
     isRunning,
     pause,
     reset,

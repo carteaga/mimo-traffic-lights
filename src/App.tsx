@@ -27,18 +27,38 @@ function App() {
     DEFAULT_CONFIG,
   )
   const config = sanitizeConfig(storedConfig)
-  const { isBlocked, isReady, isSupported, playTestTone, playTone, primeAudio } =
-    useSoundManager()
+  const {
+    isBlocked,
+    isReady,
+    isSupported,
+    playCountdownTone,
+    playTestTone,
+    playTone,
+    primeAudio,
+  } = useSoundManager()
 
-  const { currentState, isRunning, pause, reset, selectState, start, timeLeft } =
-    useTrafficLightController({
-      config,
-      onStateChange: (state) => {
-        if (config.soundEnabled && isReady) {
-          void playTone(state)
-        }
-      },
-    })
+  const {
+    currentState,
+    isTransitionImminent,
+    isRunning,
+    pause,
+    reset,
+    selectState,
+    start,
+    timeLeft,
+  } = useTrafficLightController({
+    config,
+    onCountdownTick: () => {
+      if (config.soundEnabled && isReady) {
+        void playCountdownTone()
+      }
+    },
+    onStateChange: (state) => {
+      if (config.soundEnabled && isReady) {
+        void playTone(state)
+      }
+    },
+  })
 
   function updateConfig(partial: Partial<typeof config>) {
     setStoredConfig((previousConfig) =>
@@ -175,7 +195,10 @@ function App() {
                 }
               />
             </div>
-            <TrafficLight currentState={currentState} />
+            <TrafficLight
+              currentState={currentState}
+              isTransitionImminent={isTransitionImminent}
+            />
             <div className="hero-controls-overlay">
               <Controls
                 disabled={remoteSessionLocked}
