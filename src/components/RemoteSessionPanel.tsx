@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import type { RemoteConnectionStatus, TrafficLightState } from '../types'
 import { useRemoteDisplaySession } from '../hooks/useRemoteDisplaySession'
+import { checkRemoteBackendHealth } from '../utils/remote'
 
 type RemoteSessionPanelProps = {
   onRemoteStateChange: (state: TrafficLightState) => void
@@ -24,16 +25,42 @@ export function RemoteSessionPanel({
   onSessionLockChange,
 }: RemoteSessionPanelProps) {
   const [qrSrc, setQrSrc] = useState<string | null>(null)
+  const [isBackendAvailable, setIsBackendAvailable] = useState<boolean | null>(null)
   const { closeSession, controllerUrl, error, snapshot, startSession, status } =
     useRemoteDisplaySession({ onRemoteStateChange })
 
   useEffect(() => {
+    let cancelled = false
+
+    async function loadBackendHealth() {
+      const isHealthy = await checkRemoteBackendHealth()
+
+      if (cancelled) {
+        return
+      }
+
+      setIsBackendAvailable(isHealthy)
+    }
+
+    void loadBackendHealth()
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isBackendAvailable === false) {
+      onSessionLockChange(false)
+      return
+    }
+
     onSessionLockChange(Boolean(controllerUrl))
 
     return () => {
       onSessionLockChange(false)
     }
-  }, [controllerUrl, onSessionLockChange])
+  }, [controllerUrl, isBackendAvailable, onSessionLockChange])
 
   useEffect(() => {
     async function generateQrCode() {
@@ -52,6 +79,10 @@ export function RemoteSessionPanel({
 
     void generateQrCode()
   }, [controllerUrl])
+
+  if (isBackendAvailable !== true) {
+    return null
+  }
 
   return (
     <section className="panel remote-session-card">

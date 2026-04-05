@@ -40,6 +40,18 @@ export async function createRemoteSession() {
   return (await response.json()) as { sessionId: string }
 }
 
+export async function checkRemoteBackendHealth() {
+  try {
+    const response = await fetch(`${getRemoteApiBaseUrl()}/health`, {
+      method: 'GET',
+    })
+
+    return response.ok
+  } catch {
+    return false
+  }
+}
+
 export function sendRemoteMessage(socket: WebSocket, message: RemoteClientMessage) {
   socket.send(JSON.stringify(message))
 }
