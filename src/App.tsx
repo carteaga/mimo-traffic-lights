@@ -1,6 +1,7 @@
 import './App.css'
 
 import { Controls } from './components/Controls'
+import { QuickSettingsRail } from './components/QuickSettingsRail'
 import { RemoteSessionPanel } from './components/RemoteSessionPanel'
 import { SettingsPanel } from './components/SettingsPanel'
 import { SoundToggle } from './components/SoundToggle'
@@ -148,6 +149,17 @@ function App() {
         </header>
         <div className="hero-light-stage">
           <div className="hero-light-stack">
+            <div className="hero-settings-overlay">
+              <QuickSettingsRail
+                config={config}
+                isSoundBlocked={isBlocked}
+                onToggleSound={() =>
+                  handleAction(() =>
+                    updateConfig({ soundEnabled: !config.soundEnabled }),
+                  )
+                }
+              />
+            </div>
             <TrafficLight currentState={currentState} />
             <div className="hero-controls-overlay">
               <Controls

@@ -35,19 +35,34 @@ export function SettingsPanel({
 
       <div className="settings-grid">
         {FIELDS.map((field) => (
-          <label key={field.key} className="field">
+          <section key={field.key} className="field field--stepper">
             <span>{field.label}</span>
-            <input
-              type="number"
-              min={MIN_DURATION}
-              max={MAX_DURATION}
-              inputMode="numeric"
-              value={config[field.key]}
-              onChange={(event) =>
-                onDurationChange(field.key, Number(event.target.value))
-              }
-            />
-          </label>
+            <div className="duration-stepper" aria-label={`Tiempo ${field.label.toLowerCase()}`}>
+              <button
+                type="button"
+                className="stepper-button"
+                onClick={() =>
+                  onDurationChange(field.key, Math.max(MIN_DURATION, config[field.key] - 1))
+                }
+                disabled={config[field.key] <= MIN_DURATION}
+                aria-label={`Reducir tiempo ${field.label.toLowerCase()}`}
+              >
+                −
+              </button>
+              <span className="stepper-value">{config[field.key]}s</span>
+              <button
+                type="button"
+                className="stepper-button"
+                onClick={() =>
+                  onDurationChange(field.key, Math.min(MAX_DURATION, config[field.key] + 1))
+                }
+                disabled={config[field.key] >= MAX_DURATION}
+                aria-label={`Aumentar tiempo ${field.label.toLowerCase()}`}
+              >
+                +
+              </button>
+            </div>
+          </section>
         ))}
       </div>
       <p className="field-help">
