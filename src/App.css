@@ -20,8 +20,8 @@
       ) / 3
   );
   --lamp-size-by-width: calc(
-    100vw - (var(--hero-horizontal-padding) * 2) - (var(--traffic-panel-padding) * 2) -
-      (var(--traffic-shell-padding) * 2) - 1rem
+    min(100vw, 100rem) - (var(--hero-horizontal-padding) * 2) -
+      (var(--traffic-panel-padding) * 2) - (var(--traffic-shell-padding) * 2) - 1rem
   );
   --lamp-size: min(var(--lamp-size-by-height), var(--lamp-size-by-width));
   min-height: 100vh;
@@ -46,7 +46,7 @@
 .hero-panel,
 .dashboard,
 .footer {
-  width: min(100%, 74rem);
+  width: 100%;
   margin: 0 auto;
   padding-inline: var(--hero-horizontal-padding);
 }
@@ -506,59 +506,12 @@
 
 @media (min-width: 860px) {
   .app {
-    --hero-header-height: 3rem;
-    --control-rail-width: 5rem;
-    --control-overlay-shift: clamp(-2rem, -3vw, -0.4rem);
-    --traffic-panel-padding: 1rem;
-    --traffic-shell-padding: 1rem;
-    --traffic-gap: 1rem;
-    --lamp-size: min(16rem, calc((100dvh - 16rem) / 3));
-  }
-
-  .hero-panel {
-    min-height: auto;
-    padding-top: 2rem;
-    grid-template-columns: minmax(0, 0.2fr) minmax(19rem, 24rem);
-    grid-template-rows: auto 1fr;
-    align-items: center;
-    gap: 1.5rem;
-    overflow: visible;
-  }
-
-  .hero-kicker {
-    padding-top: 1rem;
-    font-size: 0.84rem;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    justify-self: start;
-  }
-
-  .hero-header {
-    justify-content: center;
-  }
-
-  .hero-title {
-    padding-top: 1rem;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    text-align: left;
-  }
-
-  .dashboard {
-    grid-template-columns: minmax(0, 1fr);
-    align-items: start;
-  }
-
-  .traffic-light-card {
-    width: min(100%, 24rem);
-    min-height: 42rem;
-  }
-
-  .traffic-light-shell {
-    width: calc(var(--lamp-size) + (var(--traffic-shell-padding) * 2));
-  }
-
-  .lamp {
-    width: var(--lamp-size);
+    --hero-horizontal-padding: clamp(1.25rem, 2vw, 2.5rem);
+    --hero-header-height: 2.3rem;
+    --control-rail-width: clamp(4.5rem, 5vw, 5.5rem);
+    --control-overlay-shift: clamp(-1.8rem, -2vw, -0.45rem);
+    --traffic-panel-padding: clamp(0.55rem, 0.9dvh, 1rem);
+    --traffic-shell-padding: clamp(0.65rem, 1dvh, 1rem);
+    --traffic-gap: clamp(0.55rem, 0.9dvh, 1rem);
   }
 }
