@@ -1,18 +1,14 @@
+import type { TrafficLightState } from '../types'
+
 type TimerDisplayProps = {
-  isRunning: boolean
+  currentState: TrafficLightState
   timeLeft: number
 }
 
-export function TimerDisplay({ isRunning, timeLeft }: TimerDisplayProps) {
+export function TimerDisplay({ timeLeft }: TimerDisplayProps) {
   return (
-    <section className="panel timer-card" aria-live="polite">
-      <p className="eyebrow">Contador</p>
+    <div className="timer-chip" aria-live="polite">
       <div className="timer-value">{timeLeft}s</div>
-      <p className="timer-hint">
-        {isRunning
-          ? 'Cuenta regresiva en curso.'
-          : 'Listo para iniciar o cambiar de estado.'}
-      </p>
-    </section>
+    </div>
   )
 }

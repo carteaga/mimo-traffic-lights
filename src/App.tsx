@@ -5,7 +5,12 @@ import { SettingsPanel } from './components/SettingsPanel'
 import { SoundToggle } from './components/SoundToggle'
 import { TimerDisplay } from './components/TimerDisplay'
 import { TrafficLight } from './components/TrafficLight'
-import { DEFAULT_CONFIG, STORAGE_KEY } from './constants'
+import {
+  DEFAULT_CONFIG,
+  STATE_EMOJIS,
+  STATE_LABELS,
+  STORAGE_KEY,
+} from './constants'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useSoundManager } from './hooks/useSoundManager'
 import { useTrafficLightController } from './hooks/useTrafficLightController'
@@ -65,21 +70,24 @@ function App() {
   return (
     <main className={`app app--${currentState}`}>
       <section className="hero-panel">
-        <div className="hero-copy">
-          <p className="eyebrow">Semaforo virtual educativo</p>
-          <h1>Simulador visual y sonoro para practicas pedagogicas</h1>
-          <p className="lead">
-            Usa el telefono como referencia educativa para detenerse, prepararse
-            y avanzar con tiempos configurables.
-          </p>
-        </div>
-
+        <header className="hero-header">
+          <div className={`hero-kicker hero-kicker--${currentState}`}>
+            <span className="hero-kicker__emoji" aria-hidden="true">
+              {STATE_EMOJIS[currentState]}
+            </span>
+            <span>{STATE_LABELS[currentState]}</span>
+          </div>
+          <TimerDisplay
+            currentState={currentState}
+            timeLeft={timeLeft}
+          />
+          <p className="hero-title">Simulador virtual</p>
+        </header>
         <TrafficLight currentState={currentState} />
       </section>
 
       <section className="dashboard">
         <div className="dashboard-main">
-          <TimerDisplay isRunning={isRunning} timeLeft={timeLeft} />
           <Controls
             currentState={currentState}
             isRunning={isRunning}
@@ -134,8 +142,8 @@ function App() {
 
       <footer className="footer">
         <p>Vibecodeado por Cristian</p>
-        <a href="https://github.com/tu-usuario" target="_blank" rel="noreferrer">
-          github.com/tu-usuario
+        <a href="https://github.com/carteaga/" target="_blank" rel="noreferrer">
+          github.com/carteaga
         </a>
       </footer>
     </main>

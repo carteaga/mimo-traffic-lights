@@ -27,31 +27,66 @@
 }
 
 .hero-panel {
-  padding-top: 1rem;
+  min-height: 100svh;
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+  padding-bottom: 1rem;
   display: grid;
-  gap: 1rem;
+  grid-template-rows: auto 1fr;
+  gap: 0.35rem;
+  align-items: stretch;
 }
 
-.hero-copy {
-  padding: 1rem 0.25rem 0;
+.hero-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 5vw, 2.5rem);
+  padding-inline: 0.25rem;
+  text-align: center;
 }
 
-.hero-copy h1 {
-  margin: 0.3rem 0 0.75rem;
-  font-size: clamp(2.2rem, 8vw, 4.6rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-}
-
-.lead {
+.hero-kicker {
   margin: 0;
-  max-width: 32rem;
-  color: #cbd5e1;
-  font-size: 1.05rem;
+  padding: 0.35rem 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(226, 232, 240, 0.72);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero-kicker__emoji {
+  font-size: 1rem;
+}
+
+.hero-title {
+  margin: 0;
+  padding-top: 0.35rem;
+  color: rgba(226, 232, 240, 0.84);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.hero-kicker--red {
+  color: #fca5a5;
+}
+
+.hero-kicker--yellow {
+  color: #fcd34d;
+}
+
+.hero-kicker--green {
+  color: #86efac;
 }
 
 .dashboard {
-  padding-block: 1rem 5.5rem;
+  padding-block: 0 5.5rem;
   display: grid;
   gap: 1rem;
 }
@@ -73,22 +108,27 @@
 
 .traffic-light-card {
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
+  min-height: 100%;
+  height: 100%;
+  align-content: space-between;
+  grid-template-rows: minmax(0, 1fr) auto;
 }
 
 .traffic-light-shell {
-  width: min(100%, 15rem);
+  width: min(100%, clamp(15rem, 58svh, 20rem));
   margin: 0 auto;
-  padding: 1rem;
-  border-radius: 2.5rem;
+  padding: clamp(0.9rem, 2.2svh, 1.15rem);
+  border-radius: 2.75rem;
   background: linear-gradient(180deg, #1f2937 0%, #020617 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 1.4rem 2.5rem rgba(0, 0, 0, 0.35);
+  align-self: center;
 }
 
 .lamp {
-  width: min(100%, 12rem);
+  width: min(100%, clamp(12.8rem, 46svh, 16rem));
   aspect-ratio: 1;
   margin: 0 auto;
   border-radius: 50%;
@@ -98,7 +138,7 @@
 }
 
 .lamp + .lamp {
-  margin-top: 0.9rem;
+  margin-top: 1rem;
 }
 
 .lamp--active {
@@ -144,34 +184,53 @@
   margin: 0.25rem 0 0;
 }
 
+.status-meta {
+  margin: 0;
+  color: rgba(147, 197, 253, 0.78);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.status-copy h1 {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.88);
+}
+
 .status-label {
-  margin: 0.7rem 0 0;
-  font-size: 2rem;
+  margin: 0.45rem 0 0;
+  font-size: clamp(1.9rem, 8vw, 2.5rem);
   font-weight: 800;
   color: var(--state-accent);
 }
 
 .status-description {
-  margin: 0.15rem 0 0;
+  margin: 0.1rem 0 0;
   color: #cbd5e1;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
-.timer-card {
+.timer-chip {
+  min-width: fit-content;
+  padding-top: 0.35rem;
   text-align: center;
 }
 
 .timer-value {
-  margin-top: 0.5rem;
-  font-size: clamp(3rem, 12vw, 5rem);
-  font-weight: 900;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   line-height: 1;
+  color: rgba(226, 232, 240, 0.9);
 }
 
-.timer-hint,
 .field-help,
 .notice-card p:last-child {
-  margin: 0.6rem 0 0;
+  margin: 0.35rem 0 0;
   color: #cbd5e1;
 }
 
@@ -285,13 +344,47 @@
 
 @media (min-width: 860px) {
   .hero-panel {
+    min-height: auto;
     padding-top: 2rem;
-    grid-template-columns: minmax(0, 1.15fr) minmax(19rem, 24rem);
+    grid-template-columns: minmax(0, 0.2fr) minmax(19rem, 24rem);
+    grid-template-rows: 1fr;
     align-items: center;
+    gap: 1.5rem;
+  }
+
+  .hero-kicker {
+    padding-top: 1rem;
+    font-size: 0.84rem;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    justify-self: start;
+  }
+
+  .hero-header {
+    justify-content: center;
+  }
+
+  .hero-title {
+    padding-top: 1rem;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    text-align: left;
   }
 
   .dashboard {
     grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.8fr);
     align-items: start;
+  }
+
+  .traffic-light-card {
+    min-height: 42rem;
+  }
+
+  .traffic-light-shell {
+    width: min(100%, 20rem);
+  }
+
+  .lamp {
+    width: min(100%, 15rem);
   }
 }

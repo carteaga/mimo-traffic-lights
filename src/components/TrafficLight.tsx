@@ -20,8 +20,8 @@ export function TrafficLight({ currentState }: TrafficLightProps) {
       </div>
 
       <div className="status-copy">
-        <p className="eyebrow">Simulador educativo</p>
-        <h1 id="estado-actual">Semaforo virtual</h1>
+        <p className="status-meta">Simulador educativo</p>
+        <h1 id="estado-actual">Estado actual</h1>
         <p className="status-label">{STATE_LABELS[currentState]}</p>
         <p className="status-description">{STATE_DESCRIPTIONS[currentState]}</p>
       </div>

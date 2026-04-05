@@ -16,6 +16,12 @@ export const STATE_LABELS: Record<TrafficLightState, string> = {
   green: 'Verde',
 }
 
+export const STATE_EMOJIS: Record<TrafficLightState, string> = {
+  red: '🚦',
+  yellow: '🚦',
+  green: '🚦',
+}
+
 export const STATE_DESCRIPTIONS: Record<TrafficLightState, string> = {
   red: 'Detente',
   yellow: 'Preparate',
