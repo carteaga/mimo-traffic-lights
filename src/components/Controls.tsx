@@ -1,10 +1,12 @@
 type ControlsProps = {
+  disabled?: boolean
   isRunning: boolean
   onReset: () => void
   onTogglePlayback: () => void
 }
 
 export function Controls({
+  disabled = false,
   isRunning,
   onReset,
   onTogglePlayback,
@@ -18,6 +20,7 @@ export function Controls({
         type="button"
         className={`floating-control floating-control--primary ${isRunning ? 'floating-control--pause' : 'floating-control--play'}`}
         onClick={onTogglePlayback}
+        disabled={disabled}
         aria-label={isRunning ? 'Pausar ciclo automático' : 'Iniciar ciclo automático'}
       >
         {isRunning ? '❚❚' : '▶'}
@@ -26,6 +29,7 @@ export function Controls({
         type="button"
         className="floating-control floating-control--stop"
         onClick={onReset}
+        disabled={disabled}
         aria-label="Detener y reiniciar semáforo"
       >
         ■

@@ -1,6 +1,7 @@
 import './App.css'
 
 import { Controls } from './components/Controls'
+import { RemoteSessionPanel } from './components/RemoteSessionPanel'
 import { SettingsPanel } from './components/SettingsPanel'
 import { SoundToggle } from './components/SoundToggle'
 import { TimerDisplay } from './components/TimerDisplay'
@@ -14,9 +15,11 @@ import {
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useSoundManager } from './hooks/useSoundManager'
 import { useTrafficLightController } from './hooks/useTrafficLightController'
+import { useCallback, useState } from 'react'
 import { sanitizeConfig } from './utils/config'
 
 function App() {
+  const [remoteSessionLocked, setRemoteSessionLocked] = useState(false)
   const [storedConfig, setStoredConfig] = useLocalStorage(
     STORAGE_KEY,
     DEFAULT_CONFIG,
@@ -61,6 +64,14 @@ function App() {
     }
   }
 
+  const handleRemoteStateChange = useCallback(
+    (state: 'red' | 'yellow' | 'green') => {
+      pause()
+      selectState(state)
+    },
+    [pause, selectState],
+  )
+
   return (
     <main className={`app app--${currentState}`}>
       <section className="hero-panel">
@@ -82,11 +93,15 @@ function App() {
             <TrafficLight currentState={currentState} />
             <div className="hero-controls-overlay">
               <Controls
+                disabled={remoteSessionLocked}
                 isRunning={isRunning}
                 onReset={() => handleAction(reset)}
                 onTogglePlayback={() =>
                   handleAction(() => {
                     updateConfig({ mode: 'automatic' })
+                    if (remoteSessionLocked) {
+                      return
+                    }
                     if (isRunning) {
                       pause()
                       return
@@ -102,6 +117,10 @@ function App() {
 
       <section className="dashboard">
         <aside className="dashboard-side">
+          <RemoteSessionPanel
+            onRemoteStateChange={handleRemoteStateChange}
+            onSessionLockChange={setRemoteSessionLocked}
+          />
           <SettingsPanel
             config={config}
             onDurationChange={handleDurationChange}
