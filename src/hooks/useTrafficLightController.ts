@@ -23,11 +23,12 @@ export function useTrafficLightController({
   const [currentState, setCurrentState] = useState<TrafficLightState>('red')
   const [timeLeft, setTimeLeft] = useState(config.redDuration)
   const [isRunning, setIsRunning] = useState(false)
-  const lastStateRef = useRef<TrafficLightState>('red')
+  const sequenceStateRef = useRef<TrafficLightState>('red')
+  const previousEmittedStateRef = useRef<TrafficLightState>('red')
 
   useEffect(() => {
-    if (lastStateRef.current !== currentState) {
-      lastStateRef.current = currentState
+    if (previousEmittedStateRef.current !== currentState) {
+      previousEmittedStateRef.current = currentState
       onStateChange?.(currentState)
     }
   }, [currentState, onStateChange])
@@ -44,14 +45,14 @@ export function useTrafficLightController({
         }
 
         if (config.mode === 'automatic') {
-          const nextState = getNextState(lastStateRef.current)
-          lastStateRef.current = nextState
+          const nextState = getNextState(sequenceStateRef.current)
+          sequenceStateRef.current = nextState
           setCurrentState(nextState)
           return getDurationForState(config, nextState)
         }
 
         setIsRunning(false)
-        return getDurationForState(config, lastStateRef.current)
+        return getDurationForState(config, sequenceStateRef.current)
       })
     }, 1000)
 
@@ -78,13 +79,13 @@ export function useTrafficLightController({
 
   function reset() {
     setIsRunning(false)
-    lastStateRef.current = 'red'
+    sequenceStateRef.current = 'red'
     setCurrentState('red')
     setTimeLeft(config.redDuration)
   }
 
   function selectState(state: TrafficLightState) {
-    lastStateRef.current = state
+    sequenceStateRef.current = state
     setCurrentState(state)
     setTimeLeft(getDurationForState(config, state))
     setIsRunning(false)
