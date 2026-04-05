@@ -15,7 +15,7 @@ import {
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useSoundManager } from './hooks/useSoundManager'
 import { useTrafficLightController } from './hooks/useTrafficLightController'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { sanitizeConfig } from './utils/config'
 
 function App() {
@@ -25,13 +25,14 @@ function App() {
     DEFAULT_CONFIG,
   )
   const config = sanitizeConfig(storedConfig)
-  const { playTone, primeAudio } = useSoundManager()
+  const { isBlocked, isReady, isSupported, playTestTone, playTone, primeAudio } =
+    useSoundManager()
 
   const { currentState, isRunning, pause, reset, selectState, start, timeLeft } =
     useTrafficLightController({
       config,
       onStateChange: (state) => {
-        if (config.soundEnabled) {
+        if (config.soundEnabled && isReady) {
           void playTone(state)
         }
       },
@@ -71,6 +72,60 @@ function App() {
     },
     [pause, selectState],
   )
+
+  useEffect(() => {
+    if (!config.soundEnabled || isReady || !isSupported) {
+      return
+    }
+
+    let cancelled = false
+
+    async function unlockAudio() {
+      if (cancelled) {
+        return
+      }
+
+      await primeAudio()
+    }
+
+    function handleFirstGesture() {
+      void unlockAudio()
+      window.removeEventListener('pointerdown', handleFirstGesture)
+      window.removeEventListener('touchstart', handleFirstGesture)
+      window.removeEventListener('keydown', handleFirstGesture)
+    }
+
+    window.addEventListener('pointerdown', handleFirstGesture, { passive: true })
+    window.addEventListener('touchstart', handleFirstGesture, { passive: true })
+    window.addEventListener('keydown', handleFirstGesture)
+
+    return () => {
+      cancelled = true
+      window.removeEventListener('pointerdown', handleFirstGesture)
+      window.removeEventListener('touchstart', handleFirstGesture)
+      window.removeEventListener('keydown', handleFirstGesture)
+    }
+  }, [config.soundEnabled, isReady, isSupported, primeAudio])
+
+  function getAudioStatusMessage() {
+    if (!config.soundEnabled) {
+      return 'El sonido esta desactivado.'
+    }
+
+    if (!isSupported) {
+      return 'Tu navegador no soporta audio web.'
+    }
+
+    if (isReady) {
+      return 'Audio listo.'
+    }
+
+    if (isBlocked) {
+      return 'Toca la pantalla para habilitar el audio.'
+    }
+
+    return 'Toca la pantalla para habilitar el audio.'
+  }
 
   return (
     <main className={`app app--${currentState}`}>
@@ -161,10 +216,18 @@ function App() {
                 )
               }
             />
-            <p className="field-help">
-              El sonido se habilita tras una interaccion para respetar las
-              restricciones del navegador.
-            </p>
+            {import.meta.env.DEV ? (
+              <button
+                type="button"
+                className="toggle sound-test-button"
+                onClick={() => {
+                  void playTestTone()
+                }}
+              >
+                Probar sonido
+              </button>
+            ) : null}
+            <p className="field-help">{getAudioStatusMessage()}</p>
           </section>
 
           <section className="panel notice-card">
