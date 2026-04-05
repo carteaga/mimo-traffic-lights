@@ -1,6 +1,6 @@
 # Semaforo Virtual Educativo
 
-Aplicacion web mobile-first construida con Vite, React y TypeScript para simular un semaforo virtual con fines pedagogicos. Incluye modo manual y automatico, contador regresivo, sonido activable y persistencia local.
+Aplicacion web mobile-first construida con Vite, React y TypeScript para simular un semaforo virtual con fines pedagogicos. Incluye modo manual y automatico, contador regresivo, sonido activable, persistencia local y control remoto por QR usando un backend separado.
 
 ## Caracteristicas
 
@@ -19,6 +19,36 @@ Aplicacion web mobile-first construida con Vite, React y TypeScript para simular
 - `npm run build`
 - `npm run lint`
 - `npm run preview`
+
+## Desarrollo local
+
+1. Copia `.env.example` a `.env.local`.
+2. Define `VITE_REMOTE_API_URL=http://localhost:8787`.
+3. Ejecuta este frontend con `npm run dev`.
+4. Levanta el backend separado del proyecto `mimo-traffic-lights-backend`.
+
+## Despliegue
+
+### Frontend en Netlify
+
+- Build command: `npm run build`
+- Publish directory: `dist`
+- Variable de entorno:
+  - `VITE_REMOTE_API_URL=https://tu-backend-remoto.com`
+
+El archivo [`netlify.toml`](/home/land/projects/mimo-traffic-lights/netlify.toml) ya deja configurado el build y el fallback SPA para rutas como `/remote/:sessionId`.
+
+### Backend remoto
+
+El backend ya no vive en este repo. Debe desplegarse desde el proyecto separado `mimo-traffic-lights-backend` en un proveedor con soporte para Node persistente y WebSocket, como Render, Railway o Fly.io.
+
+### Flujo en produccion
+
+- El display abre la app en Netlify.
+- El frontend crea la sesion contra el backend remoto usando `VITE_REMOTE_API_URL`.
+- El QR apunta al dominio Netlify en `/remote/:sessionId`.
+- El controller abre esa URL en Netlify.
+- Display y controller se conectan al backend WebSocket externo.
 
 ## Nota
 
