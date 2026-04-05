@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import './App.css'
 
 import { STATE_LABELS } from './constants'
@@ -15,6 +17,38 @@ function RemoteControllerApp() {
   const sessionId = getSessionIdFromPath()
   const { canControl, error, setState, snapshot, status } =
     useRemoteControllerSession(sessionId)
+
+  useEffect(() => {
+    const previousTitle = document.title
+    const existingRobots = document.querySelector('meta[name="robots"]')
+    const previousRobotsContent = existingRobots?.getAttribute('content')
+    let createdRobotsMeta: HTMLMetaElement | null = null
+
+    document.title = 'Control remoto del semaforo'
+
+    if (existingRobots) {
+      existingRobots.setAttribute('content', 'noindex,nofollow')
+    } else {
+      createdRobotsMeta = document.createElement('meta')
+      createdRobotsMeta.name = 'robots'
+      createdRobotsMeta.content = 'noindex,nofollow'
+      document.head.appendChild(createdRobotsMeta)
+    }
+
+    return () => {
+      document.title = previousTitle
+
+      if (existingRobots) {
+        if (previousRobotsContent) {
+          existingRobots.setAttribute('content', previousRobotsContent)
+        } else {
+          existingRobots.removeAttribute('content')
+        }
+      }
+
+      createdRobotsMeta?.remove()
+    }
+  }, [])
 
   function getStatusCopy() {
     if (error) {

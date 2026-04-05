@@ -74,7 +74,10 @@ function App() {
 
   return (
     <main className={`app app--${currentState}`}>
-      <section className="hero-panel">
+      <section className="hero-panel" aria-labelledby="main-seo-title">
+        <h1 id="main-seo-title" className="sr-only">
+          Semaforo virtual educativo para celular
+        </h1>
         <header className="hero-header">
           <div className={`hero-kicker hero-kicker--${currentState}`}>
             <span className="hero-kicker__emoji" aria-hidden="true">
@@ -117,6 +120,20 @@ function App() {
 
       <section className="dashboard">
         <aside className="dashboard-side">
+          <section className="panel seo-copy" aria-labelledby="seo-overview-title">
+            <p className="eyebrow">Semaforo virtual</p>
+            <h2 id="seo-overview-title">Simulador de semaforo para celular</h2>
+            <p>
+              Este semaforo virtual educativo muestra las luces roja, amarilla y
+              verde en formato vertical, con temporizador visible y sonido
+              opcional para apoyar actividades pedagogicas.
+            </p>
+            <p>
+              Funciona como simulacion educativa en telefono o navegador y
+              permite practicar el cambio de estados del semaforo, ajustar
+              tiempos y usar un modo automatico o manual segun la actividad.
+            </p>
+          </section>
           <RemoteSessionPanel
             onRemoteStateChange={handleRemoteStateChange}
             onSessionLockChange={setRemoteSessionLocked}
@@ -152,6 +169,7 @@ function App() {
 
           <section className="panel notice-card">
             <p className="eyebrow">Uso responsable</p>
+            <h2>Simulacion educativa</h2>
             <p>
               Esta app es una simulacion educativa. No reemplaza senalizacion
               oficial ni tiene validez para control de transito real.
