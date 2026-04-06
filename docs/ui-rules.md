@@ -24,6 +24,7 @@
 - When horizontal space becomes constrained:
   - controls should compact first,
   - quick settings should compact second,
+  - side rails may float over the outer semaforo shell if needed,
   - overlays may overlap the stage if needed,
   - the semaforo should be the last element to lose usable visual space.
 - When vertical space becomes constrained:

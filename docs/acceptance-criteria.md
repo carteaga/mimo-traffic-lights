@@ -53,6 +53,7 @@ These criteria define what counts as acceptable delivery for the MVP and related
 - Given a large desktop viewport, when the hero renders, then the semaforo is fully visible and not hidden by its surrounding layout.
 - Given a mid-width mobile viewport, when the hero renders, then rails and controls adapt without abrupt visual breakage.
 - Given a narrow mobile viewport, when horizontal space is tight, then overlap behavior must preserve semaforo clarity before preserving extra spacing.
+- Given a narrow or ultra-narrow mobile viewport, when the hero renders, then the central semaforo stage remains visible while side rails float or overlap before the semaforo loses priority.
 - Given a low-height mobile viewport, when vertical space is tight, then header spacing and rail density may compact before the semaforo loses its primary readable state.
 - Given representative constrained sizes such as narrow mobile and low-height mobile, when the layout is reviewed, then the active lamp remains visually dominant.
 
