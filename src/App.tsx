@@ -227,20 +227,6 @@ function App() {
           {heroHeader}
         </div>
         <div className="hero-light-stage">
-          <div className="hero-mobile-stage-shell">
-            <div className="hero-mobile-rail hero-mobile-rail--left">
-              {quickSettingsRail}
-            </div>
-            <div className="hero-mobile-stage-center">
-              <TrafficLight
-                currentState={currentState}
-                isTransitionImminent={isTransitionImminent}
-              />
-            </div>
-            <div className="hero-mobile-rail hero-mobile-rail--right">
-              {playbackControls}
-            </div>
-          </div>
           <div className="hero-light-stack">
             <div className="hero-settings-overlay">
               {quickSettingsRail}

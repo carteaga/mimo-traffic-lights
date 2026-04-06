@@ -6,8 +6,8 @@
   --hero-header-height: 2rem;
   --hero-mobile-topbar-height: 0rem;
   --hero-mobile-header-gap: 0rem;
-  --settings-rail-width: clamp(3rem, 10vw, 3.75rem);
-  --control-rail-width: clamp(3.75rem, 12vw, 4.5rem);
+  --settings-rail-width: clamp(2.55rem, min(10vw, 8.5dvh), 3.75rem);
+  --control-rail-width: clamp(3rem, min(12vw, 10dvh), 4.5rem);
   --hero-side-column-gap: clamp(0.9rem, 3vw, 2rem);
   --hero-side-rail-space-left: var(--settings-rail-width);
   --hero-side-rail-space-right: var(--control-rail-width);
@@ -15,10 +15,10 @@
     var(--lamp-size) + (var(--traffic-shell-padding) * 2) +
       (var(--traffic-panel-padding) * 2)
   );
-  --settings-rail-inset: clamp(0.45rem, 1.4vw, 1rem);
-  --control-rail-inset: clamp(-0.6rem, -1.8vw, -1.15rem);
-  --settings-overlay-shift: 0rem;
-  --control-overlay-shift: 0rem;
+  --settings-rail-inset: 0rem;
+  --control-rail-inset: 0rem;
+  --settings-overlay-shift: clamp(-0.85rem, calc(3vw - 1rem), 1.35rem);
+  --control-overlay-shift: clamp(-1.1rem, calc(3.4vw - 1.2rem), 1.55rem);
   --traffic-panel-padding: clamp(0.45rem, 1.1dvh, 0.8rem);
   --traffic-shell-padding: clamp(0.5rem, 1.25dvh, 0.8rem);
   --traffic-gap: clamp(0.45rem, 1dvh, 0.8rem);
@@ -34,8 +34,6 @@
   );
   --lamp-size-by-width: calc(
     min(100vw, 100rem) - (var(--hero-horizontal-padding) * 2) -
-      var(--hero-side-rail-space-left) - var(--hero-side-rail-space-right) -
-      (var(--hero-side-column-gap) * 2) -
       (var(--traffic-panel-padding) * 2) - (var(--traffic-shell-padding) * 2) - 1rem
   );
   --lamp-size: min(var(--lamp-size-by-height), var(--lamp-size-by-width));
@@ -97,10 +95,6 @@
   display: block;
 }
 
-.hero-mobile-stage-shell {
-  display: none;
-}
-
 .hero-kicker {
   margin: 0;
   padding: 0.35rem 0 0;
@@ -135,41 +129,34 @@
   display: grid;
   align-items: center;
   justify-items: center;
+  overflow: visible;
 }
 
 .hero-light-stack {
   position: relative;
-  width: min(
-    100%,
-    calc(
-      var(--traffic-scene-width) + var(--hero-side-rail-space-left) +
-        var(--hero-side-rail-space-right) + (var(--hero-side-column-gap) * 2)
-    )
-  );
+  width: min(100%, var(--traffic-scene-width));
   min-height: 100%;
   display: grid;
-  grid-template-columns:
-    minmax(0, var(--settings-rail-width))
-    minmax(0, var(--traffic-scene-width))
-    minmax(0, var(--control-rail-width));
+  grid-template-columns: minmax(0, var(--traffic-scene-width));
+  justify-items: center;
   align-items: center;
-  column-gap: var(--hero-side-column-gap);
+  overflow: visible;
 }
 
 .hero-controls-overlay {
-  position: relative;
-  grid-column: 3;
-  justify-self: end;
-  transform: translateX(var(--control-rail-inset));
+  position: absolute;
+  top: 50%;
+  left: calc(100% + var(--control-overlay-shift));
+  transform: translateY(-50%);
   z-index: 2;
   pointer-events: none;
 }
 
 .hero-settings-overlay {
-  position: relative;
-  grid-column: 1;
-  justify-self: start;
-  transform: translateX(var(--settings-rail-inset));
+  position: absolute;
+  top: 50%;
+  right: calc(100% + var(--settings-overlay-shift));
+  transform: translateY(-50%);
   z-index: 2;
   pointer-events: none;
 }
@@ -850,11 +837,6 @@
   .app {
     --hero-mobile-topbar-height: auto;
     --hero-mobile-header-gap: 0.9rem;
-    --hero-side-column-gap: 0rem;
-    --hero-side-rail-space-left: 0rem;
-    --hero-side-rail-space-right: 0rem;
-    --settings-rail-inset: 0rem;
-    --control-rail-inset: 0rem;
     --hero-stage-height: calc(
       100dvh - var(--hero-top-padding) - var(--hero-bottom-padding) -
         var(--hero-header-height) - var(--hero-mobile-header-gap) - var(--hero-gap)
@@ -875,39 +857,6 @@
 
   .hero-desktop-header {
     display: none;
-  }
-
-  .hero-mobile-stage-shell {
-    height: 100%;
-    width: min(
-      100%,
-      calc(
-        var(--traffic-scene-width) + var(--settings-rail-width) +
-          var(--control-rail-width) + 1rem
-      )
-    );
-    display: grid;
-    grid-template-columns:
-      minmax(0, var(--settings-rail-width))
-      minmax(0, var(--traffic-scene-width))
-      minmax(0, var(--control-rail-width));
-    align-items: center;
-    justify-items: center;
-    column-gap: 0.5rem;
-  }
-
-  .hero-mobile-rail {
-    height: 100%;
-    display: grid;
-    align-items: center;
-  }
-
-  .hero-mobile-rail--left {
-    justify-items: start;
-  }
-
-  .hero-mobile-rail--right {
-    justify-items: end;
   }
 
   .hero-mobile-header {
@@ -936,71 +885,7 @@
     width: 100%;
   }
 
-  .hero-mobile-stage-center {
-    width: min(100%, var(--traffic-scene-width));
-    height: 100%;
-    display: grid;
-    align-items: center;
-  }
-
-  .hero-mobile-stage-center .traffic-light-card {
-    width: min(100%, var(--traffic-scene-width));
-  }
-
-  .hero-light-stack {
-    display: none;
-  }
-
-  .hero-settings-overlay,
-  .hero-controls-overlay {
-    display: none;
-  }
-
   .traffic-light-card {
     grid-column: 1;
-  }
-}
-
-@media (max-width: 310px) {
-  .app {
-    --settings-overlay-shift: -0.1rem;
-    --control-overlay-shift: -0.25rem;
-  }
-
-  .hero-mobile-stage-shell {
-    display: none;
-  }
-
-  .hero-light-stage {
-    display: grid;
-    align-items: center;
-    justify-items: center;
-  }
-
-  .hero-light-stack {
-    display: grid;
-    width: min(100%, var(--traffic-scene-width));
-    grid-template-columns: minmax(0, var(--traffic-scene-width));
-    justify-items: center;
-  }
-
-  .hero-settings-overlay,
-  .hero-controls-overlay {
-    position: absolute;
-    top: 50%;
-    display: block;
-    grid-column: 1;
-  }
-
-  .hero-settings-overlay {
-    left: max(-0.15rem, var(--settings-overlay-shift));
-    justify-self: unset;
-    transform: translateY(-50%);
-  }
-
-  .hero-controls-overlay {
-    right: max(-0.35rem, var(--control-overlay-shift));
-    justify-self: unset;
-    transform: translateY(-50%);
   }
 }
