@@ -4,6 +4,8 @@
   --hero-bottom-padding: 1rem;
   --hero-gap: 0.25rem;
   --hero-header-height: 2rem;
+  --hero-mobile-topbar-height: 0rem;
+  --hero-mobile-header-gap: 0rem;
   --settings-rail-width: clamp(3rem, 10vw, 3.75rem);
   --control-rail-width: clamp(3.75rem, 12vw, 4.5rem);
   --hero-side-column-gap: clamp(0.9rem, 3vw, 2rem);
@@ -85,6 +87,18 @@
   padding-inline: 0.25rem;
   min-height: var(--hero-header-height);
   text-align: center;
+}
+
+.hero-mobile-topbar {
+  display: none;
+}
+
+.hero-desktop-header {
+  display: block;
+}
+
+.hero-mobile-stage-shell {
+  display: none;
 }
 
 .hero-kicker {
@@ -507,12 +521,17 @@
 }
 
 .timer-chip {
+  display: grid;
+  place-items: center;
   min-width: fit-content;
   padding-top: 0.35rem;
   text-align: center;
 }
 
 .timer-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.9rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -829,18 +848,137 @@
 
 @media (max-width: 560px) {
   .app {
+    --hero-mobile-topbar-height: auto;
+    --hero-mobile-header-gap: 0.9rem;
     --hero-side-column-gap: 0rem;
     --hero-side-rail-space-left: 0rem;
     --hero-side-rail-space-right: 0rem;
     --settings-rail-inset: 0rem;
     --control-rail-inset: 0rem;
+    --hero-stage-height: calc(
+      100dvh - var(--hero-top-padding) - var(--hero-bottom-padding) -
+        var(--hero-header-height) - var(--hero-mobile-header-gap) - var(--hero-gap)
+    );
     --lamp-size-by-width: calc(
       min(100vw, 100rem) - (var(--hero-horizontal-padding) * 2) -
         (var(--traffic-panel-padding) * 2) - (var(--traffic-shell-padding) * 2) - 1rem
     );
   }
 
+  .hero-panel {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .hero-mobile-topbar {
+    display: block;
+  }
+
+  .hero-desktop-header {
+    display: none;
+  }
+
+  .hero-mobile-stage-shell {
+    height: 100%;
+    width: min(
+      100%,
+      calc(
+        var(--traffic-scene-width) + var(--settings-rail-width) +
+          var(--control-rail-width) + 1rem
+      )
+    );
+    display: grid;
+    grid-template-columns:
+      minmax(0, var(--settings-rail-width))
+      minmax(0, var(--traffic-scene-width))
+      minmax(0, var(--control-rail-width));
+    align-items: center;
+    justify-items: center;
+    column-gap: 0.5rem;
+  }
+
+  .hero-mobile-rail {
+    height: 100%;
+    display: grid;
+    align-items: center;
+  }
+
+  .hero-mobile-rail--left {
+    justify-items: start;
+  }
+
+  .hero-mobile-rail--right {
+    justify-items: end;
+  }
+
+  .hero-mobile-header {
+    min-width: 0;
+  }
+
+  .hero-mobile-header .hero-header {
+    min-height: var(--hero-header-height);
+    justify-content: center;
+    gap: 0.75rem;
+    padding-inline: 0.15rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-mobile-header .timer-chip {
+    min-width: 3ch;
+    padding-top: 0;
+  }
+
+  .hero-mobile-header .hero-kicker,
+  .hero-mobile-header .hero-title {
+    padding-top: 0;
+  }
+
+  .hero-light-stage {
+    width: 100%;
+  }
+
+  .hero-mobile-stage-center {
+    width: min(100%, var(--traffic-scene-width));
+    height: 100%;
+    display: grid;
+    align-items: center;
+  }
+
+  .hero-mobile-stage-center .traffic-light-card {
+    width: min(100%, var(--traffic-scene-width));
+  }
+
   .hero-light-stack {
+    display: none;
+  }
+
+  .hero-settings-overlay,
+  .hero-controls-overlay {
+    display: none;
+  }
+
+  .traffic-light-card {
+    grid-column: 1;
+  }
+}
+
+@media (max-width: 430px) {
+  .app {
+    --settings-overlay-shift: -0.1rem;
+    --control-overlay-shift: -0.25rem;
+  }
+
+  .hero-mobile-stage-shell {
+    display: none;
+  }
+
+  .hero-light-stage {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .hero-light-stack {
+    display: grid;
     width: min(100%, var(--traffic-scene-width));
     grid-template-columns: minmax(0, var(--traffic-scene-width));
     justify-items: center;
@@ -850,6 +988,7 @@
   .hero-controls-overlay {
     position: absolute;
     top: 50%;
+    display: block;
     grid-column: 1;
   }
 
@@ -863,9 +1002,5 @@
     right: max(-0.35rem, var(--control-overlay-shift));
     justify-self: unset;
     transform: translateY(-50%);
-  }
-
-  .traffic-light-card {
-    grid-column: 1;
   }
 }
