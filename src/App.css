@@ -785,6 +785,12 @@
   color: #93c5fd;
 }
 
+.footer-repo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 @media (max-height: 740px) {
   .app {
     --hero-header-height: 1.7rem;
