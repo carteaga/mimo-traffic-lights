@@ -20,6 +20,12 @@ Aplicacion web mobile-first construida con Vite, React y TypeScript para simular
 - `npm run lint`
 - `npm run preview`
 
+## Documentation
+
+- Product spec: [`docs/product-spec.md`](/home/land/projects/mimo-traffic-lights/docs/product-spec.md)
+- UI rules: [`docs/ui-rules.md`](/home/land/projects/mimo-traffic-lights/docs/ui-rules.md)
+- Acceptance criteria: [`docs/acceptance-criteria.md`](/home/land/projects/mimo-traffic-lights/docs/acceptance-criteria.md)
+
 ## Desarrollo local
 
 1. Copia `.env.example` a `.env.local`.
