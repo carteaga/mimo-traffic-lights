@@ -1,7 +1,4 @@
-import type { TrafficLightState } from '../types'
-
 type TimerDisplayProps = {
-  currentState: TrafficLightState
   timeLeft: number
 }
 

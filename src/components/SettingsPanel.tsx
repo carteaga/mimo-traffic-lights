@@ -1,12 +1,9 @@
 import { MAX_DURATION, MIN_DURATION } from '../constants'
-import type { TrafficLightConfig } from '../types'
+import type { DurationKey, TrafficLightConfig } from '../types'
 
 type SettingsPanelProps = {
   config: TrafficLightConfig
-  onDurationChange: (
-    key: 'redDuration' | 'yellowDuration' | 'greenDuration',
-    value: number,
-  ) => void
+  onDurationChange: (key: DurationKey, value: number) => void
   onResetDefaults: () => void
 }
 

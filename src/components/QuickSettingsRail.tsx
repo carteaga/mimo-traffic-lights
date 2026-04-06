@@ -1,11 +1,9 @@
-import type { TrafficLightConfig } from '../types'
+import type { DurationKey, TrafficLightConfig } from '../types'
 
 type QuickSettingsRailProps = {
   config: TrafficLightConfig
   isSoundBlocked: boolean
-  onCycleDuration: (
-    key: 'redDuration' | 'yellowDuration' | 'greenDuration',
-  ) => void
+  onCycleDuration: (key: DurationKey) => void
   onToggleSound: () => void
 }
 
