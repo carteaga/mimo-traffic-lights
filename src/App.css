@@ -961,7 +961,7 @@
   }
 }
 
-@media (max-width: 430px) {
+@media (max-width: 310px) {
   .app {
     --settings-overlay-shift: -0.1rem;
     --control-overlay-shift: -0.25rem;
